@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contador de Tiempo Transcurrido</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
+      }
+      input {
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 0.5rem;
+      }
+      h1 {
+        font-size: 2.8rem;
+      }
+      #resultado {
+        font-size: 2.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+      .oculto {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Esperando Respuesta Del Sigof</h1>
+      <div id="inputContainer">
+        <input type="time" id="horaIngresada" required />
+        <button onclick="iniciarContador()">Iniciar Contador</button>
+      </div>
+      <div id="resultado"></div>
+    </div>
+
+    <script>
+      let intervalo;
+
+      function iniciarContador() {
+        const horaIngresada = document.getElementById("horaIngresada").value;
+        if (!horaIngresada) {
+          alert("Por favor, ingrese una hora válida.");
+          return;
+        }
+
+        // Ocultar el contenedor del input y el botón
+        document.getElementById("inputContainer").classList.add("oculto");
+
+        const [horas, minutos] = horaIngresada.split(":");
+        const fechaIngresada = new Date();
+        fechaIngresada.setHours(horas, minutos, 0, 0);
+
+        function actualizarContador() {
+          const ahora = new Date();
+          const diferencia = ahora - fechaIngresada;
+
+          if (diferencia < 0) {
+            fechaIngresada.setDate(fechaIngresada.getDate() - 1);
+          }
+
+          const horas = Math.floor(diferencia / 3600000);
+          const minutos = Math.floor((diferencia % 3600000) / 60000);
+          const segundos = Math.floor((diferencia % 60000) / 1000);
+
+          document.getElementById(
+            "resultado"
+          ).textContent = `Tiempo transcurrido: ${horas
+            .toString()
+            .padStart(2, "0")}:${minutos.toString().padStart(2, "0")}:${segundos
+            .toString()
+            .padStart(2, "0")}`;
+        }
+
+        // Ejecutar inmediatamente y luego cada segundo
+        actualizarContador();
+        intervalo = setInterval(actualizarContador, 1000);
+      }
+    </script>
+  </body>
+</html>
